@@ -23,6 +23,7 @@ jobs:
       - name: build the code
         run: |
           pnpm install --no-frozen-lockfile
+          pnpm add -D cache-loader
           pnpm build
           
       # 修复 Ubuntu 24+ Nginx 目录写入权限
