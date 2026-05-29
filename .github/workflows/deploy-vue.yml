@@ -23,12 +23,10 @@ jobs:
           
       - name: build the code
         run: |
-          # 1. 开启扁平化，解决 pnpm 隐藏底层依赖的问题
           pnpm config set shamefully-hoist true
           pnpm install --no-frozen-lockfile
-          # 2. 补齐缺失的包
-          pnpm add -D cache-loader eslint-loader babel-loader
-          # 3. 终极魔法：强行让 Node 20 兼容老版 Webpack 的加密算法
+          # 终极修复：严格锁定老版本，完美兼容 Webpack 4
+          pnpm add -D cache-loader@4.1.0 eslint-loader@2.2.1 babel-loader@8.2.5
           export NODE_OPTIONS=--openssl-legacy-provider
           pnpm build
           
