@@ -16,15 +16,20 @@ jobs:
           version: 10
           run_install: false
           
-      # 终极修复：降级到 Node 16 以完美兼容旧版 Vue 项目
-      - name: Use Node.js 16.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           
       - name: build the code
         run: |
+          # 1. 开启扁平化，解决 pnpm 隐藏底层依赖的问题
+          pnpm config set shamefully-hoist true
           pnpm install --no-frozen-lockfile
+          # 2. 补齐缺失的包
+          pnpm add -D cache-loader eslint-loader babel-loader
+          # 3. 终极魔法：强行让 Node 20 兼容老版 Webpack 的加密算法
+          export NODE_OPTIONS=--openssl-legacy-provider
           pnpm build
           
       - name: set the ubuntu user as the owner of the /var/www/html directory
